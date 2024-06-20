@@ -51,7 +51,7 @@ if __name__ == "__main__":
     initialize(args, seed=args.seed)
 
     splits = np.load(args.splits_dir, allow_pickle=True).tolist()
-    dir = f"{args.optimizer}_{(args.optimizer=='SAM')*('_'+args.base_optimizer)}"
+    dir = f"{args.optimizer}_{(args.optimizer=='SAM' or args.optimizer=='ASAM')*('_'+args.base_optimizer)}"
 
     if args.save:
         count = 1
@@ -62,6 +62,7 @@ if __name__ == "__main__":
             unique_dir = f'results/{dir}-{count}'
         
         os.mkdir(unique_dir)
+        np.save(f'{unique_dir}/params.npy', args_dict)
 
     for trial, split in splits.items():
         if trial not in args.list_trials:
@@ -125,9 +126,9 @@ if __name__ == "__main__":
 
             for train_index, batch in enumerate(dataset.train):
                 inputs, targets = (b.to(device) for b in batch)
-                inputs = inputs.float()
+                inputs = inputs
                 
-                if args.optimizer != 'SAM':
+                if args.optimizer != 'SAM' and args.optimizer != 'ASAM':
                     predictions = model(inputs)
                     targets = targets.to(torch.long)
 
@@ -173,14 +174,17 @@ if __name__ == "__main__":
             with torch.no_grad():
                 for batch in dataset.val:
                     inputs, targets = (b.to(device) for b in batch)
-                    inputs = inputs.float()
 
                     predictions = model(inputs)
                     targets = targets.to(torch.long)
                     loss = smooth_crossentropy(predictions, targets)
                     correct = torch.argmax(predictions, 1) == targets
                     accuracy = correct.float().mean().item()
-                    loss_avg = loss.mean().item()
+                    
+                    try:
+                        loss_avg = loss.mean().item()
+                    except:
+                        loss_avg = 0
 
                     batch_loss.append(loss_avg)
                     batch_acc.append(accuracy)
@@ -249,6 +253,3 @@ if __name__ == "__main__":
         if args.save:
             print(f'Saving values at {trial_dir}')
             np.save(f'{trial_dir}/scores.npy', scores)
-
-if args.save:
-    np.save(f'{unique_dir}/params.npy', args_dict)

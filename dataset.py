@@ -1,4 +1,5 @@
 from torch.utils.data import Dataset, DataLoader
+import torch
 import numpy as np
 
 class RamanSpectra:
@@ -7,9 +8,9 @@ class RamanSpectra:
 
         X_train, X_val, X_test, y_train, y_val, y_test = self._get_splits(spectra_path, label_path, spectra_interval, split)
         
-        train_dataset = RamanSpectraDataset(X_train, y_train, transform)
-        val_dataset = RamanSpectraDataset(X_val, y_val, transform)
-        test_dataset = RamanSpectraDataset(X_test, y_test, transform)
+        train_dataset = RamanSpectraDataset(X_train, y_train, transform=ToFloatTensor())
+        val_dataset = RamanSpectraDataset(X_val, y_val, transform=ToFloatTensor())
+        test_dataset = RamanSpectraDataset(X_test, y_test, transform=ToFloatTensor())
 
         self.train = DataLoader(train_dataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
         self.val = DataLoader(val_dataset, batch_size=batch_size, num_workers=num_workers)
@@ -57,3 +58,8 @@ class RamanSpectraDataset(Dataset):
             X = self.transform(X)
 
         return (X, y)
+
+class ToFloatTensor(object):
+    def __call__(self, x):
+        x = torch.from_numpy(x).float()
+        return x
