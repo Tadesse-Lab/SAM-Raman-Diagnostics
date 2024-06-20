@@ -24,7 +24,7 @@ if __name__ == "__main__":
     parser.add_argument('--label_dir', default = ['data/spectral_data/y_2018clinical.npy', 'data/spectral_data/y_2019clinical.npy'], type = list, help="Directory to labels.")
     parser.add_argument('--list_trials', default = [1,2,3,4,5,6,7,8,9,10], type = list, help = 'Specified trials to run.')
     parser.add_argument('--spectra_interval', default = [400,100], type = list, help = 'Specified patient intervals for clinical significance.')
-    parser.add_argument('--splits_dir', default = 'utility/splits.npy', type = str, help='Directory to data splits.')
+    parser.add_argument('--splits_dir', default = 'utils/splits.npy', type = str, help='Directory to data splits.')
 
     parser.add_argument('--batch_size', default=16, type=int, help='Batch size for the training and validation loops.')
     parser.add_argument('--learning_rate', default=0.001, type=float, help='Learning rate for the optimizer.')
@@ -66,8 +66,9 @@ if __name__ == "__main__":
             continue
 
         print('Trial', trial, '\nSplit:\n', split)
-        trial_dir = unique_dir + f'/{trial}'
-        os.mkdir(trial_dir)
+        if args.save:
+            trial_dir = unique_dir + f'/{trial}'
+            os.mkdir(trial_dir)
 
         dataset = RamanSpectra(args.spectra_dir, args.label_dir, args.spectra_interval, split, args.shuffle, num_workers=2, batch_size=args.batch_size)
         log = Log(log_each=10)

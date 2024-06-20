@@ -20,7 +20,7 @@ class ResidualBlock(nn.Module):
                 nn.Conv1d(in_channels, out_channels, kernel_size=1,
                     stride=stride, bias=False),
                 nn.BatchNorm1d(out_channels))
-            
+        
         self.activ = get_activation(activation)
 
     def forward(self, x):
@@ -47,7 +47,7 @@ class ResNet(nn.Module):
         strides = [1] + [2] * (len(hidden_sizes) - 1)
         for idx, hidden_size in enumerate(hidden_sizes):
             layers.append(self._make_layer(hidden_size, num_blocks[idx],
-                stride=strides[idx]))
+                stride=strides[idx], activation=activation))
         self.encoder = nn.Sequential(*layers)
 
         self.z_dim = self._get_encoding_size()
@@ -65,12 +65,12 @@ class ResNet(nn.Module):
         z = self.encode(x)
         return self.linear(z)
 
-    def _make_layer(self, out_channels, num_blocks, stride=1):
+    def _make_layer(self, out_channels, num_blocks, stride=1, activation='relu'):
         strides = [stride] + [1] * (num_blocks - 1)
         blocks = []
         for stride in strides:
             blocks.append(ResidualBlock(self.in_channels, out_channels,
-                stride=stride, activation=self.activation))
+                stride=stride, activation=activation))
             self.in_channels = out_channels
         return nn.Sequential(*blocks)
 
@@ -90,8 +90,8 @@ def get_activation(activation='relu'):
         Activation function.
     """
     if activation == 'relu':
-        return F.relu()
+        return F.relu
     elif activation == 'selu':
-        return F.selu()
+        return F.selu
     elif activation == 'gelu':
-        return F.gelu()
+        return F.gelu
