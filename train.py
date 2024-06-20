@@ -67,9 +67,9 @@ if __name__ == "__main__":
 
         print('Trial', trial, '\nSplit:\n', split)
         trial_dir = unique_dir + f'/{trial}'
+        os.mkdir(trial_dir)
 
         dataset = RamanSpectra(args.spectra_dir, args.label_dir, args.spectra_interval, split, args.shuffle, num_workers=2, batch_size=args.batch_size)
-        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         log = Log(log_each=10)
 
         hidden_sizes = [args.hidden_size] * args.layers
@@ -77,27 +77,29 @@ if __name__ == "__main__":
 
         model = ResNet(hidden_sizes, num_blocks, input_dim=args.input_dim,
                     in_channels=args.in_channels, n_classes=args.n_classes, activation=args.activation)
+        device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+        model = model.to(device)
         
         criterion = smooth_crossentropy
 
-        if args.base_optimizer == "SGD":
-            print("Base Optimizer SGD")
+        if args.base_optimizer == 'SGD':
+            print('Base Optimizer SGD')
             base_optimizer = torch.optim.SGD
-        elif args.base_optimizer == "Adam":
-            print("Base Optimizer Adam")
+        elif args.base_optimizer == 'Adam':
+            print('Base Optimizer Adam')
             base_optimizer = torch.optim.Adam
 
-        if args.optimizer == "Adam":
-            print("Optimizer: Adam")
+        if args.optimizer == 'Adam':
+            print('Optimizer: Adam')
             optimizer = optim.Adam(model.parameters(), lr=args.learning_rate, betas=(0.5, 0.999))
         elif args.optimizer == "SGD":
-            print("Optimizer: SGD")
+            print('Optimizer: SGD')
             optimizer = torch.optim.SGD(model.parameters(), lr=args.learning_rate)
-        elif args.optimizer == "SAM":
-            print("Optimizer: SAM")
+        elif args.optimizer == 'SAM':
+            print('Optimizer: SAM')
             optimizer = SAM(model.parameters(), base_optimizer, rho=args.rho, adaptive=False, lr=args.learning_rate, weight_decay=args.weight_decay)
-        elif args.optimizer == "ASAM":
-            print("Optimizer: ASAM")
+        elif args.optimizer == 'ASAM':
+            print('Optimizer: ASAM')
             optimizer = SAM(model.parameters(), base_optimizer, rho=args.rho, adaptive=True, lr=args.learning_rate, weight_decay=args.weight_decay)
     
         scheduler = StepLR(optimizer, args.learning_rate, args.epochs)
@@ -106,15 +108,11 @@ if __name__ == "__main__":
 
         print('Starting Training')
         
-        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-        model = model.to(device)
-
         train_loss = []
         train_accuracy = []
         val_loss = []
         val_accuracy = []
         time_epochs = []
-
         best_acc = 0
 
         for epoch in range(args.epochs):
@@ -195,13 +193,15 @@ if __name__ == "__main__":
             epoch_time = end_time - start_time
             time_epochs.append(epoch_time)
 
-            if epoch_accuracy_avg > best_acc:
-                print("Saving New Best Val Model")
+            if epoch_accuracy_avg > best_acc and args.save:
+                print('Saving New Best Val Model')
                 best_val = epoch_accuracy_avg
-                torch.save(model.state_dict(), 'best_val.pth')
+                torch.save(model.state_dict(), f'{trial_dir}/best_val.pth')
 
-        print("Loading best val model")
-        model.load_state_dict(torch.load('best_val.pth'))
+        print('Starting Testing')
+        if args.save:
+            model.load_state_dict(torch.load(f'{trial_dir}/best_val.pth'))
+
         model.eval()
 
         batch_loss = []
@@ -228,8 +228,8 @@ if __name__ == "__main__":
         test_loss = np.mean(batch_loss)
         test_accuracy = np.mean(batch_acc)
 
-        print(" ")
-        print("Test Loss:", epoch_loss_avg, "Test Accuracy:", epoch_accuracy_avg)
+        print(' ')
+        print('Test Loss:', epoch_loss_avg, 'Test Accuracy:', epoch_accuracy_avg)
 
         scores = {
             'train-time': time_epochs,
