@@ -6,7 +6,7 @@ from torch.autograd import Variable
 class ResidualBlock(nn.Module):
     def __init__(self, in_channels, out_channels, stride=1, activation='relu'):
         super(ResidualBlock, self).__init__()
-
+        self.activ = get_activation(activation)
         self.conv1 = nn.Conv1d(in_channels, out_channels, kernel_size=5,
             stride=stride, padding=2, dilation=1, bias=False)
         self.bn1 = nn.BatchNorm1d(num_features=out_channels)
@@ -20,8 +20,6 @@ class ResidualBlock(nn.Module):
                 nn.Conv1d(in_channels, out_channels, kernel_size=1,
                     stride=stride, bias=False),
                 nn.BatchNorm1d(out_channels))
-        
-        self.activ = get_activation(activation)
 
     def forward(self, x):
         out = self.activ(self.bn1(self.conv1(x)))
@@ -38,6 +36,7 @@ class ResNet(nn.Module):
         self.input_dim = input_dim
         self.in_channels = in_channels
         self.n_classes = n_classes
+        self.activ = get_activation(activation)
         
         self.conv1 = nn.Conv1d(1, self.in_channels, kernel_size=5, stride=1,
             padding=2, bias=False)
@@ -52,7 +51,6 @@ class ResNet(nn.Module):
 
         self.z_dim = self._get_encoding_size()
         self.linear = nn.Linear(self.z_dim, self.n_classes)
-        self.activ = get_activation(activation)
 
 
     def encode(self, x):
