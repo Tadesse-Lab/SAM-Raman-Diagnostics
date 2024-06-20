@@ -3,7 +3,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
 
-
 class ResidualBlock(nn.Module):
     def __init__(self, in_channels, out_channels, stride=1, activation='relu'):
         super(ResidualBlock, self).__init__()
@@ -30,7 +29,6 @@ class ResidualBlock(nn.Module):
         out += self.shortcut(x)
         out = self.activ(out)
         return out
-
 
 class ResNet(nn.Module):
     def __init__(self, hidden_sizes, num_blocks, input_dim=1000,
@@ -81,7 +79,6 @@ class ResNet(nn.Module):
         z = self.encode(temp)
         z_dim = z.data.size(1)
         return z_dim
-
 
 def get_activation(activation='relu'):
     """Get specified activation for ResNet architecture.
