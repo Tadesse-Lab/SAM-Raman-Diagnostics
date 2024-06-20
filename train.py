@@ -42,7 +42,7 @@ if __name__ == "__main__":
     parser.add_argument('--optimizer', default = 'SAM', type = str, help='optimizer to be used.')
     parser.add_argument('--base_optimizer', default = 'SGD', type = str, help='base optimizer to be used.')
     parser.add_argument('--seed', default = 42, type = int, help = 'Initialization seed.')
-    parser.add_argument('--shuffle', default = False, type = bool, help = 'Shuffle training set.')
+    parser.add_argument('--shuffle', default = True, type = bool, help = 'Shuffle training set.')
     parser.add_argument('--save', action='store_true', help='Save results.')
 
     args = parser.parse_args()
@@ -51,15 +51,15 @@ if __name__ == "__main__":
     initialize(args, seed=args.seed)
 
     splits = np.load(args.splits_dir, allow_pickle=True).tolist()
-    dir = f"{args.optimizer}_{(args.optimizer=='SAM' or args.optimizer=='ASAM')*('_'+args.base_optimizer)}"
+    dir = f"{args.optimizer}{(args.optimizer=='SAM' or args.optimizer=='ASAM')*('_'+args.base_optimizer)}"
 
     if args.save:
         count = 1
-        unique_dir = f'results/{dir}-{count}'
+        unique_dir = f'results/{dir}_{count}'
         
         while os.path.exists(unique_dir):
             count += 1
-            unique_dir = f'results/{dir}-{count}'
+            unique_dir = f'results/{dir}_{count}'
         
         os.mkdir(unique_dir)
         np.save(f'{unique_dir}/params.npy', args_dict)
