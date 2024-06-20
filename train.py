@@ -37,6 +37,7 @@ if __name__ == "__main__":
     parser.add_argument('--rho', default=0.05, type=float, help='Rho value for the optimizer.')
     parser.add_argument('--momentum', default=0.9, type=float, help='Momentum value for the optimizer.')
     parser.add_argument('--weight_decay', default=0.0005, type=float, help='Weight decay value for the optimizer.')
+    parser.add_argument('--label_smoothing', default=0.1, type=float, help='Use 0.0 for no label smoothing.')
     parser.add_argument('--activation', default = 'relu', type = str, help = 'Type of activation to use in ResNet.')
     parser.add_argument('--optimizer', default = 'SAM', type = str, help='optimizer to be used.')
     parser.add_argument('--base_optimizer', default = 'SGD', type = str, help='base optimizer to be used.')
@@ -50,6 +51,7 @@ if __name__ == "__main__":
     initialize(args, seed=args.seed)
 
     splits = np.load(args.splits_dir, allow_pickle=True).tolist()
+    dir = f"{args.optimizer}_{(args.optimizer=='SAM')*('_'+args.base_optimizer)}"
 
     if args.save:
         count = 1
@@ -105,8 +107,6 @@ if __name__ == "__main__":
     
         scheduler = StepLR(optimizer, args.learning_rate, args.epochs)
 
-        dir = f"{args.optimizer}_{(optimizer=='SAM')*('_'+base_optimizer)}"
-
         print('Starting Training')
         
         train_loss = []
@@ -125,6 +125,7 @@ if __name__ == "__main__":
 
             for train_index, batch in enumerate(dataset.train):
                 inputs, targets = (b.to(device) for b in batch)
+                inputs = inputs.float()
                 
                 if args.optimizer != 'SAM':
                     predictions = model(inputs)
@@ -138,7 +139,7 @@ if __name__ == "__main__":
                 else:
                     enable_running_stats(model)
                     predictions = model(inputs)
-                    targets = targets.to(torch.long)
+                    targiets = targets.to(torch.long)
                     loss = smooth_crossentropy(predictions, targets, smoothing=args.label_smoothing)
                     loss.mean().backward()
                     optimizer.first_step(zero_grad=True)
@@ -172,7 +173,8 @@ if __name__ == "__main__":
             with torch.no_grad():
                 for batch in dataset.val:
                     inputs, targets = (b.to(device) for b in batch)
-                    
+                    inputs = inputs.float()
+
                     predictions = model(inputs)
                     targets = targets.to(torch.long)
                     loss = smooth_crossentropy(predictions, targets)
@@ -212,7 +214,8 @@ if __name__ == "__main__":
         with torch.no_grad():
             for batch in dataset.test:
                 inputs, targets = (b.to(device) for b in batch)
-                
+                inputs = inputs.float()
+
                 predictions = model(inputs)
                 targets = targets.to(torch.long)
                 loss = smooth_crossentropy(predictions, targets)
