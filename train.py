@@ -201,9 +201,10 @@ if __name__ == "__main__":
             time_epochs.append(epoch_time)
 
             if epoch_accuracy_avg > best_acc and args.save:
-                print('Saving New Best Val Model')
+                #print('Saving New Best Val Model')
                 best_val = epoch_accuracy_avg
                 torch.save(model.state_dict(), f'{trial_dir}/best_val.pth')
+            log.flush
 
         print('Starting Testing')
         if args.save:

@@ -49,7 +49,9 @@ class Log:
 
             if accuracy > self.best_accuracy:
                 self.best_accuracy = accuracy
+                print(f"┠──────────────╂──────────────┼──────────────╂──────────────┼──────────────╂───N─E─W───B─E─S─T───V─A─L───╂")
 
+                
     def _train_step(self, model, loss, accuracy, learning_rate: float) -> None:
         self.learning_rate = learning_rate
         self.last_steps_state["loss"] += loss.sum().item()
