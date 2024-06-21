@@ -3,10 +3,10 @@ import torch
 import numpy as np
 
 class RamanSpectra:
-    def __init__(self, spectra_path, label_path, spectra_interval, split, shuffle=True, num_workers=2, batch_size=16, transform=None):
-        assert len(spectra_path) == len(label_path) == len(spectra_interval), 'Spectra, labels, and invervals do not align.'
+    def __init__(self, spectra_dir, label_dir, spectra_interval, split, shuffle=True, num_workers=2, batch_size=16, transform=None):
+        assert len(spectra_dir) == len(label_dir) == len(spectra_interval), 'Spectra, labels, and invervals do not align.'
 
-        X_train, X_val, X_test, y_train, y_val, y_test = self._get_splits(spectra_path, label_path, spectra_interval, split)
+        X_train, X_val, X_test, y_train, y_val, y_test = self._get_splits(spectra_dir, label_dir, spectra_interval, split)
         
         train_dataset = RamanSpectraDataset(X_train, y_train, transform=ToFloatTensor())
         val_dataset = RamanSpectraDataset(X_val, y_val, transform=ToFloatTensor())
@@ -16,10 +16,10 @@ class RamanSpectra:
         self.val = DataLoader(val_dataset, batch_size=batch_size, num_workers=num_workers)
         self.test = DataLoader(test_dataset, batch_size=batch_size, num_workers=num_workers)
 
-    def _get_splits(self, spectra_path, label_path, spectra_interval, split):
+    def _get_splits(self, spectra_dir, label_dir, spectra_interval, split):
         X_train, X_val, X_test, y_train, y_val, y_test = [], [], [], [], [], []
 
-        for spectra, label, interval in zip(spectra_path, label_path, spectra_interval):
+        for spectra, label, interval in zip(spectra_dir, label_dir, spectra_interval):
             X = np.load(spectra)
             y = np.load(label)
 
