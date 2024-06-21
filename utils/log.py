@@ -95,3 +95,6 @@ class Log:
         print(f"┃              ┃              ╷              ┃              ╷              ┃              ╷              ┃")
         print(f"┃       epoch  ┃        loss  │    accuracy  ┃        l.r.  │     elapsed  ┃        loss  │    accuracy  ┃")
         print(f"┠──────────────╂──────────────┼──────────────╂──────────────┼──────────────╂──────────────┼──────────────┨")
+
+    def test(self, test_loss, test_accuracy):
+        print(f"┃{' ':14}  ┃{test_loss:12.4f}  │{100*test_accuracy:10.2f} %  ┃{' ':12}  │{self._time():>12}  ┃")

@@ -237,8 +237,9 @@ if __name__ == "__main__":
         test_loss = np.mean(batch_loss)
         test_accuracy = np.mean(batch_acc)
 
-        print(' ')
-        print('Test Loss:', epoch_loss_avg, 'Test Accuracy:', epoch_accuracy_avg)
+        #print(' ')
+        #print('Test Loss:', epoch_loss_avg, 'Test Accuracy:', epoch_accuracy_avg)
+        log.test(test_loss, test_accuracy)
 
         scores = {
             'train-time': time_epochs,
