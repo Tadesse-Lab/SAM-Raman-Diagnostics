@@ -97,4 +97,8 @@ class Log:
         print(f"┠──────────────╂──────────────┼──────────────╂──────────────┼──────────────╂──────────────┼──────────────┨")
 
     def test(self, test_loss, test_accuracy):
-        print(f"┃{' ':14}  ┃{test_loss:12.4f}  │{100*test_accuracy:10.2f} %  ┃{' ':12}  │{self._time():>12}  ┃")
+        loss = self.epoch_state["loss"] / self.epoch_state["steps"]
+        accuracy = self.epoch_state["accuracy"] / self.epoch_state["steps"]
+        print(f"{loss:12.4f}  │{100*accuracy:10.2f} %  ┃", flush=True)
+        print(f"\nTest Loss: {loss:12.4f}")
+        print(f"Test Accuracy: {100*accuracy:10.2f} %")

@@ -68,7 +68,7 @@ if __name__ == "__main__":
         if trial not in args.list_trials:
             continue
 
-        print('Trial', trial, '\nSplit:\n', split)
+        print('\nTrial', trial, '\nSplit:\n', split)
         if args.save:
             trial_dir = unique_dir + f'/{trial}'
             os.mkdir(trial_dir)
@@ -205,11 +205,11 @@ if __name__ == "__main__":
                 best_val = epoch_accuracy_avg
                 torch.save(model.state_dict(), f'{trial_dir}/best_val.pth')
             log.flush
-
-        print('Starting Testing')
+        
+        #print('Starting Testing')
         if args.save:
             model.load_state_dict(torch.load(f'{trial_dir}/best_val.pth'))
-
+        
         model.eval()
 
         batch_loss = []
