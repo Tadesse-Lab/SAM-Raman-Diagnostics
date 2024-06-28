@@ -7,7 +7,6 @@ import os
 from utils.smooth_cross_entropy import smooth_crossentropy
 from utils.log import Log
 from utils.initialize import get_optimizer, get_scheduler
-from utils.step_lr import StepLR
 from utils.bypass_bn import enable_running_stats, disable_running_stats
 
 from resnet_1d import ResNet
@@ -34,7 +33,7 @@ if __name__ == "__main__":
     parser.add_argument('--momentum', default=0.9, type=float, help='Momentum value for the optimizer.')
     parser.add_argument('--weight_decay', default=0.0005, type=float, help='Weight decay value for the optimizer.')
     parser.add_argument('--label_smoothing', default=0.1, type=float, help='Use 0.0 for no label smoothing.')
-    parser.add_argument('--activation', type=str, choices=['relu','selu','gelu'], help='Activation function to use for ResNet.')
+    parser.add_argument('--activation', default='selu', type=str, choices=['relu','selu','gelu'], help='Activation function to use for ResNet.')
     parser.add_argument('--optimizer', default='SAM', type=str, choices=['SAM','ASAM','Adam', 'SGD'], help='Optimizer to be used.')
     parser.add_argument('--base_optimizer', default='SGD', type=str, choices=['Adam', 'SGD'], help='Base optimizer to be used.')
     parser.add_argument('--scheduler', default='step', type=str, choices=['step', 'cosine'], help='Learning rate scheduler to be used.')
