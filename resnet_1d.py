@@ -52,7 +52,6 @@ class ResNet(nn.Module):
         self.z_dim = self._get_encoding_size()
         self.linear = nn.Linear(self.z_dim, self.num_classes)
 
-
     def encode(self, x):
         x = self.activ(self.bn1(self.conv1(x)))
         x = self.encoder(x)
