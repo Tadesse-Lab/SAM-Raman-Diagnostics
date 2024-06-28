@@ -26,3 +26,16 @@ def get_optimizer(model, optimizer_name, learning_rate, base_optimizer_name=None
     print(f'Optimizer: {optimizer_name}')
 
     return optimizer, base_optimizer
+
+def get_scheduler(scheduler_name, optimizer, total_epochs, lr_step=None):
+    schedulers = {
+        'step': lambda: torch.optim.lr_scheduler.StepLR(optimizer, step_size=(total_epochs // 4), gamma=lr_step),
+        'cosine': lambda: torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=(total_epochs // 4), eta_min=0)
+    }
+    if scheduler_name not in schedulers:
+        raise ValueError(f'Unsupported scheduler: {scheduler_name}')
+    
+    scheduler = scheduler[scheduler_name]()
+    print(f'Optimizer: {scheduler_name}')
+
+    return scheduler
