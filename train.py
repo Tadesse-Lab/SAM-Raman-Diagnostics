@@ -73,7 +73,7 @@ if __name__ == "__main__":
     
     criterion = smooth_crossentropy
 
-    optimizer, base_optimizer = get_optimizer(model, args.optimizer, args.learning_rate, args.base_optimizer_name, 
+    optimizer, base_optimizer = get_optimizer(model, args.optimizer, args.learning_rate, args.base_optimizer, 
                                               args.rho, args.weight_decay)
 
     scheduler = get_scheduler(args.scheduler, optimizer, args.epochs, args.lr_step)
