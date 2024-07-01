@@ -17,8 +17,8 @@ if __name__ == "__main__":
     parser.add_argument('--spectra_dir', default=None, type=list, help='Directory to spectra.')
     parser.add_argument('--label_dir', default=None, type=list, help='Directory to labels.')
     parser.add_argument('--spectra_interval', default=None, type=list, help = 'Specified patient intervals for clinical significance.')
-    parser.add_argument('--weight_dir', default='models', type=str, help='Directory containing model weight(s).')
-    parser.add_argument('--param_dir', default='scores', type=str, help='Directory containing model parameters.')
+    parser.add_argument('--weight_dir', default=None, type=str, help='Directory containing model weight(s).')
+    parser.add_argument('--param_dir', default=None, type=str, help='Directory containing model parameters.')
     parser.add_argument('--seed', default=None, type=int, help='Initialization seed.')
     parser.add_argument('--shuffle', default=None, type=bool, help='Shuffle training set.')
     parser.add_argument('--save', action='store_true', help='Save results.')
@@ -38,7 +38,7 @@ if __name__ == "__main__":
     seed = args.seed if args.seed is not None else params['seed']
     shuffle = args.shuffle if args.shuffle is not None else params['shuffle']
 
-    dir = f'{params['optimizer']}{"_" + params['base_optimizer'] if params['optimizer'] in ["SAM", "ASAM"] else ""}_{args.seed}'
+    dir = f"{params['optimizer']}{'_' + params['base_optimizer'] if params['optimizer'] in ['SAM', 'ASAM'] else ''}_{seed}"
 
     if args.save:
         count = 1
@@ -93,7 +93,7 @@ if __name__ == "__main__":
     test_loss = np.mean(batch_loss)
     test_accuracy = np.mean(batch_acc)
 
-    log.test(test_loss, test_accuracy)
+    print('Test Loss: ', test_loss, 'Test Acc: ', test_accuracy)
 
     scores = {
         'test-time': inference_time,

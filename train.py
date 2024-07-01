@@ -46,7 +46,7 @@ if __name__ == "__main__":
     default_args = {action.dest: action.default for action in parser._actions if action.dest != 'help'}
     args_dict = {**default_args, **vars(args)}
 
-    dir = f'{args.optimizer}{"_" + args.base_optimizer if args.optimizer in ["SAM", "ASAM"] else ""}_{args.seed}'
+    dir = f"{args.optimizer}{'_' + args.base_optimizer if args.optimizer in ['SAM', 'ASAM'] else ''}_{args.seed}"
 
     if args.save:
         count = 1
