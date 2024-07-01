@@ -7,14 +7,14 @@ Clone repository
 ```
 git clone https://github.com/Tadesse-Lab/SAM-Raman-Diagnostics.git
 ```
-To setup environment:
+Install requirements:
 ```
 pip install -r requirements.txt
 ```
 ## Train
 If you want to train the model from scratch, here is a sample training run:
 ```
-python3 train.py --optimizer SAM --epochs 100 --spectra_dir 'PATH_TO_DATA' --label_dir 'PATH_TO_LABEL' --spectra_interval SPECTRA_INTERVAL
+python3 train.py --optimizer SAM --epochs 100 --spectra_dir 'SPECTRA_DIR' --label_dir 'LABEL_DIR' --spectra_interval SPECTRA_INTERVAL
 ```
 Full CLI:
 ```
@@ -72,6 +72,33 @@ options:
   --save                Save results.
 ```
 
+## Inference
+If you want to run inference on your trained model, here is a sample run:
+```
+python3 inference.py --spectra_dir 'SPECTRA_DIR' --label_dir 'LABEL_DIR' --spectra_interval SPECTRA_INTERVAL --param_dir 'PARAM_DIR' --weight_dir 'LABEL_DIR'
+```
+Full CLI:
+```
+usage: inference.py [-h] [--spectra_dir SPECTRA_DIR] [--label_dir LABEL_DIR]
+                    [--spectra_interval SPECTRA_INTERVAL] [--weight_dir WEIGHT_DIR] [--param_dir PARAM_DIR]
+                    [--seed SEED] [--shuffle SHUFFLE] [--save]
+
+options:
+  -h, --help            show this help message and exit
+  --spectra_dir SPECTRA_DIR
+                        Directory to spectra.
+  --label_dir LABEL_DIR
+                        Directory to labels.
+  --spectra_interval SPECTRA_INTERVAL
+                        Specified patient intervals for clinical significance.
+  --weight_dir WEIGHT_DIR
+                        Directory containing model weight(s).
+  --param_dir PARAM_DIR
+                        Directory containing model parameters.
+  --seed SEED           Initialization seed.
+  --shuffle SHUFFLE     Shuffle training set.
+  --save                Save results.
+```
 
 ## Citation
 If you find anything in our paper or repository useful, please consider citing:
