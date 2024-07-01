@@ -20,7 +20,6 @@ if __name__ == "__main__":
     parser.add_argument('--weight_dir', default=None, type=str, help='Directory containing model weight(s).')
     parser.add_argument('--param_dir', default=None, type=str, help='Directory containing model parameters.')
     parser.add_argument('--seed', default=None, type=int, help='Initialization seed.')
-    parser.add_argument('--shuffle', default=None, type=bool, help='Shuffle training set.')
     parser.add_argument('--save', action='store_true', help='Save results.')
     args = parser.parse_args()
 
@@ -35,8 +34,7 @@ if __name__ == "__main__":
         label_dir = params['label_dir']
         spectra_interval = params['spectra_interval']
 
-    seed = args.seed if args.seed is not None else params['seed']
-    shuffle = args.shuffle if args.shuffle is not None else params['shuffle']
+    seed = params['seed'] if not args.seed else args.seed
 
     dir = f"{params['optimizer']}{'_' + params['base_optimizer'] if params['optimizer'] in ['SAM', 'ASAM'] else ''}_{seed}"
 
@@ -50,7 +48,7 @@ if __name__ == "__main__":
         
         os.makedirs(unique_dir, exist_ok=True)
 
-    dataset = RamanSpectra(spectra_dir, label_dir, spectra_interval, seed, shuffle, num_workers=2, 
+    dataset = RamanSpectra(spectra_dir, label_dir, spectra_interval, seed, True, num_workers=2, 
                            batch_size=params['batch_size'])
     log = Log(log_each=10)
 
