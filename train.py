@@ -79,8 +79,6 @@ if __name__ == "__main__":
     scheduler_optimizer = optimizer.base_optimizer if args.optimizer in ['SAM', 'ASAM'] else optimizer
     scheduler = get_scheduler(args.scheduler, scheduler_optimizer, args.epochs, args.lr_step)
 
-
-
     print('Starting Training')
     
     train_loss = []
