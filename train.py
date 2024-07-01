@@ -50,11 +50,11 @@ if __name__ == "__main__":
 
     if args.save:
         count = 1
-        unique_dir = f'results/{dir}_{count}'
+        unique_dir = f'train/{dir}_{count}'
         
         while os.path.exists(unique_dir):
             count += 1
-            unique_dir = f'results/{dir}_{count}'
+            unique_dir = f'train/{dir}_{count}'
         
         os.makedirs(unique_dir, exist_ok=True)
         np.save(f'{unique_dir}/params.npy', args_dict)
