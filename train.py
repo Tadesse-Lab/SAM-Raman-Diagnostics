@@ -75,8 +75,11 @@ if __name__ == "__main__":
 
     optimizer, base_optimizer = get_optimizer(model, args.optimizer, args.learning_rate, args.base_optimizer, 
                                               args.rho, args.weight_decay)
+    
+    scheduler_optimizer = optimizer.base_optimizer if args.optimizer in ['SAM', 'ASAM'] else optimizer
+    scheduler = get_scheduler(args.scheduler, scheduler_optimizer, args.epochs, args.lr_step)
 
-    scheduler = get_scheduler(args.scheduler, optimizer, args.epochs, args.lr_step)
+
 
     print('Starting Training')
     
