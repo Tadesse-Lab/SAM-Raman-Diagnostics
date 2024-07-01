@@ -46,7 +46,7 @@ if __name__ == "__main__":
     default_args = {action.dest: action.default for action in parser._actions if action.dest != 'help'}
     args_dict = {**default_args, **vars(args)}
 
-    dir = f"{args.optimizer}{(args.optimizer=='SAM' or args.optimizer=='ASAM')*('_'+args.base_optimizer)}_{args.seed}"
+    dir = f'{args.optimizer}{"_" + args.base_optimizer if args.optimizer in ["SAM", "ASAM"] else ""}_{args.seed}'
 
     if args.save:
         count = 1
@@ -56,7 +56,7 @@ if __name__ == "__main__":
             count += 1
             unique_dir = f'results/{dir}_{count}'
         
-        os.mkdir(unique_dir)
+        os.makedirs(unique_dir, exist_ok=True)
         np.save(f'{unique_dir}/params.npy', args_dict)
 
     dataset = RamanSpectra(args.spectra_dir, args.label_dir, args.spectra_interval, args.seed, 
