@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-
 def smooth_crossentropy(pred, gold, smoothing=0.1):
     n_class = pred.size(1)
     one_hot = torch.full_like(pred, fill_value=smoothing / (n_class - 1))

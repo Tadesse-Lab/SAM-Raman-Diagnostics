@@ -30,12 +30,12 @@ class ResidualBlock(nn.Module):
 
 class ResNet(nn.Module):
     def __init__(self, hidden_sizes, num_blocks, input_dim=1000,
-        in_channels=64, n_classes=30, activation='relu'):
+        in_channels=64, num_classes=30, activation='relu'):
         super(ResNet, self).__init__()
         assert len(num_blocks) == len(hidden_sizes)
         self.input_dim = input_dim
         self.in_channels = in_channels
-        self.n_classes = n_classes
+        self.num_classes = num_classes
         self.activ = get_activation(activation)
         
         self.conv1 = nn.Conv1d(1, self.in_channels, kernel_size=5, stride=1,
@@ -50,8 +50,7 @@ class ResNet(nn.Module):
         self.encoder = nn.Sequential(*layers)
 
         self.z_dim = self._get_encoding_size()
-        self.linear = nn.Linear(self.z_dim, self.n_classes)
-
+        self.linear = nn.Linear(self.z_dim, self.num_classes)
 
     def encode(self, x):
         x = self.activ(self.bn1(self.conv1(x)))
