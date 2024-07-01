@@ -14,7 +14,11 @@ pip install -r requirements.txt
 ## Train
 If you want to train the model from scratch, here is a sample training run:
 ```
-python3 train.py --optimizer SAM --epochs 100 --spectra_dir 'SPECTRA_DIR' --label_dir 'LABEL_DIR' --spectra_interval SPECTRA_INTERVAL
+python3 train.py --optimizer SAM --epochs 100 --spectra_dir 'PATH_TO_SPECTRA' --label_dir 'PATH_TO_LABEL' --spectra_interval SPECTRA_INTERVAL
+```
+Spectra and label directories also support multiple paths to combine datasets together, as long as spectra_intervals align. For example:
+```
+python3 train.py --optimizer SAM --epochs 100 --spectra_dir ['PATH_TO_SPECTRA1', 'PATH_TO_SPECTRA2'] --label_dir ['PATH_TO_LABEL1', 'PATH_TO_LABEL2'] --spectra_interval [SPECTRA_INTERVAL1, SPECTRA_INTERVAL2]
 ```
 Full CLI:
 ```
@@ -75,7 +79,7 @@ options:
 ## Inference
 If you want to run inference on your trained model, here is a sample run:
 ```
-python3 inference.py --spectra_dir 'SPECTRA_DIR' --label_dir 'LABEL_DIR' --spectra_interval SPECTRA_INTERVAL --param_dir 'PARAM_DIR' --weight_dir 'LABEL_DIR'
+python3 inference.py --spectra_dir 'PATH_TO_SPECTRA' --label_dir 'PATH_TO_LABEL' --spectra_interval SPECTRA_INTERVAL --param_dir 'PATH_TO_MODEL_PARAMS' --weight_dir 'PATH_TO_TRAINED_WEIGHTS'
 ```
 Full CLI:
 ```
