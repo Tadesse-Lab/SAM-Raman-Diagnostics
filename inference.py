@@ -14,9 +14,9 @@ import sys; sys.path.append("..")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--spectra_dir', default=None, type=list, help='Directory to spectra.')
-    parser.add_argument('--label_dir', default=None, type=list, help='Directory to labels.')
-    parser.add_argument('--spectra_interval', default=None, type=list, help = 'Specified patient intervals for clinical significance.')
+    parser.add_argument('--spectra_dir', nargs='+', default=['data/spectral_data/X_2018clinical.npy', 'data/spectral_data/X_2019clinical.npy'], help='Directory to spectra.')
+    parser.add_argument('--label_dir', nargs='+', default=['data/spectral_data/y_2018clinical.npy', 'data/spectral_data/y_2019clinical.npy'], help='Directory to labels.')
+    parser.add_argument('--spectra_interval', nargs='+', type=int, default=[400, 100], help='Specified patient intervals for clinical significance.')
     parser.add_argument('--weight_dir', default=None, type=str, help='Directory containing model weight(s).')
     parser.add_argument('--param_dir', default=None, type=str, help='Directory containing model parameters.')
     parser.add_argument('--seed', default=None, type=int, help='Initialization seed.')
