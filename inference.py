@@ -26,7 +26,7 @@ if __name__ == "__main__":
 
     params = np.load(args.param_dir, allow_pickle=True).tolist()
 
-    if args.spectra_dir and args.lable_dir and args.spectral_interval:
+    if args.spectra_dir and args.label_dir and args.spectra_interval:
         spectra_dir = args.spectra_dir
         label_dir = args.label_dir
         spectra_interval = args.spectra_interval
