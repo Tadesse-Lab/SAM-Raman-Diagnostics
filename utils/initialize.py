@@ -35,7 +35,7 @@ def get_scheduler(scheduler_name, optimizer, total_epochs, lr_step=None):
     if scheduler_name not in schedulers:
         raise ValueError(f'Unsupported scheduler: {scheduler_name}')
     
-    scheduler = scheduler[scheduler_name]()
-    print(f'Optimizer: {scheduler_name}')
+    scheduler = schedulers[scheduler_name]()
+    print(f'Scheduler: {scheduler_name}')
 
     return scheduler

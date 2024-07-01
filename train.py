@@ -127,13 +127,14 @@ if __name__ == "__main__":
                 batch_loss.append(loss_avg)
                 batch_acc.append(accuracy) 
                 
-                log(model, loss.cpu(), correct.cpu(), scheduler.lr())
-                scheduler(epoch)
+                log(model, loss.cpu(), correct.cpu(), scheduler.get_last_lr()[0])
 
         epoch_loss_avg = np.mean(batch_loss)
         epoch_accuracy_avg = np.mean(batch_acc)
         train_loss.append(epoch_loss_avg)
         train_accuracy.append(epoch_accuracy_avg)
+
+        scheduler.step()
 
         model.eval()
         log.eval(len_dataset=len(dataset.val))
