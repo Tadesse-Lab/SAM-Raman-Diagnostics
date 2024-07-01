@@ -85,7 +85,7 @@ Full CLI:
 ```
 usage: inference.py [-h] [--spectra_dir SPECTRA_DIR] [--label_dir LABEL_DIR]
                     [--spectra_interval SPECTRA_INTERVAL] [--weight_dir WEIGHT_DIR] [--param_dir PARAM_DIR]
-                    [--seed SEED] [--shuffle SHUFFLE] [--save]
+                    [--seed SEED] [--save]
 
 options:
   -h, --help            show this help message and exit
@@ -100,7 +100,6 @@ options:
   --param_dir PARAM_DIR
                         Directory containing model parameters.
   --seed SEED           Initialization seed.
-  --shuffle SHUFFLE     Shuffle training set.
   --save                Save results.
 ```
 
