@@ -176,7 +176,7 @@ if __name__ == "__main__":
             best_val = epoch_accuracy_avg
             torch.save(model.state_dict(), f'{unique_dir}/best_val.pth')
 
-        log.flush
+    log.done()
 
     scores = {
         'train-time': time_epochs,
