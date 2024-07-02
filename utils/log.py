@@ -51,7 +51,6 @@ class Log:
                 self.best_accuracy = accuracy
                 print(f"┠──────────────╂──────────────┼──────────────╂──────────────┼──────────────╂───N─E─W───B─E─S─T───V─A─L───╂")
 
-                
     def _train_step(self, model, loss, accuracy, learning_rate: float) -> None:
         self.learning_rate = learning_rate
         self.last_steps_state["loss"] += loss.sum().item()
@@ -102,3 +101,6 @@ class Log:
         print(f"{loss:12.4f}  │{100*accuracy:10.2f} %  ┃", flush=True)
         print(f"\nTest Loss: {loss:12.4f}")
         print(f"Test Accuracy: {100*accuracy:10.2f} %")
+
+    def done(self) -> None:
+        print(f"┠──────────────╂──────────────┼──────────────╂──────────────┼──────────────╂──────────────┼──────────────┨")

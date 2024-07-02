@@ -178,6 +178,8 @@ if __name__ == "__main__":
 
         log.flush
 
+    log.done
+
     scores = {
         'train-time': time_epochs,
         'train-loss': train_loss,
