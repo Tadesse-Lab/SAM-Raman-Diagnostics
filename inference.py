@@ -14,19 +14,18 @@ import sys; sys.path.append("..")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--spectra_dir', default=None, type=list, help='Directory to spectra.')
-    parser.add_argument('--label_dir', default=None, type=list, help='Directory to labels.')
-    parser.add_argument('--spectra_interval', default=None, type=list, help = 'Specified patient intervals for clinical significance.')
+    parser.add_argument('--spectra_dir', nargs='+', default=['data/spectral_data/X_2018clinical.npy', 'data/spectral_data/X_2019clinical.npy'], help='Directory to spectra.')
+    parser.add_argument('--label_dir', nargs='+', default=['data/spectral_data/y_2018clinical.npy', 'data/spectral_data/y_2019clinical.npy'], help='Directory to labels.')
+    parser.add_argument('--spectra_interval', nargs='+', type=int, default=[400, 100], help='Specified patient intervals for clinical significance.')
     parser.add_argument('--weight_dir', default=None, type=str, help='Directory containing model weight(s).')
     parser.add_argument('--param_dir', default=None, type=str, help='Directory containing model parameters.')
     parser.add_argument('--seed', default=None, type=int, help='Initialization seed.')
-    parser.add_argument('--shuffle', default=None, type=bool, help='Shuffle training set.')
     parser.add_argument('--save', action='store_true', help='Save results.')
     args = parser.parse_args()
 
     params = np.load(args.param_dir, allow_pickle=True).tolist()
 
-    if args.spectra_dir and args.lable_dir and args.spectral_interval:
+    if args.spectra_dir and args.label_dir and args.spectra_interval:
         spectra_dir = args.spectra_dir
         label_dir = args.label_dir
         spectra_interval = args.spectra_interval
@@ -35,8 +34,7 @@ if __name__ == "__main__":
         label_dir = params['label_dir']
         spectra_interval = params['spectra_interval']
 
-    seed = args.seed if args.seed is not None else params['seed']
-    shuffle = args.shuffle if args.shuffle is not None else params['shuffle']
+    seed = params['seed'] if not args.seed else args.seed
 
     dir = f"{params['optimizer']}{'_' + params['base_optimizer'] if params['optimizer'] in ['SAM', 'ASAM'] else ''}_{seed}"
 
@@ -50,7 +48,7 @@ if __name__ == "__main__":
         
         os.makedirs(unique_dir, exist_ok=True)
 
-    dataset = RamanSpectra(spectra_dir, label_dir, spectra_interval, seed, shuffle, num_workers=2, 
+    dataset = RamanSpectra(spectra_dir, label_dir, spectra_interval, seed, True, num_workers=2, 
                            batch_size=params['batch_size'])
     log = Log(log_each=10)
 

@@ -18,7 +18,7 @@ python3 train.py --optimizer SAM --epochs 100 --spectra_dir 'PATH_TO_SPECTRA' --
 ```
 Spectra and label directories also support multiple paths to combine datasets together, as long as spectra_intervals align. For example:
 ```
-python3 train.py --optimizer SAM --epochs 100 --spectra_dir ['PATH_TO_SPECTRA1', 'PATH_TO_SPECTRA2'] --label_dir ['PATH_TO_LABEL1', 'PATH_TO_LABEL2'] --spectra_interval [SPECTRA_INTERVAL1, SPECTRA_INTERVAL2]
+python3 train.py --optimizer SAM --epochs 100 --spectra_dir 'PATH_TO_SPECTRA1' 'PATH_TO_SPECTRA2' --label_dir 'PATH_TO_LABEL1' 'PATH_TO_LABEL2' --spectra_interval SPECTRA_INTERVAL1 SPECTRA_INTERVAL2
 ```
 Full CLI:
 ```
@@ -85,7 +85,7 @@ Full CLI:
 ```
 usage: inference.py [-h] [--spectra_dir SPECTRA_DIR] [--label_dir LABEL_DIR]
                     [--spectra_interval SPECTRA_INTERVAL] [--weight_dir WEIGHT_DIR] [--param_dir PARAM_DIR]
-                    [--seed SEED] [--shuffle SHUFFLE] [--save]
+                    [--seed SEED] [--save]
 
 options:
   -h, --help            show this help message and exit
@@ -100,7 +100,6 @@ options:
   --param_dir PARAM_DIR
                         Directory containing model parameters.
   --seed SEED           Initialization seed.
-  --shuffle SHUFFLE     Shuffle training set.
   --save                Save results.
 ```
 
