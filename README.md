@@ -1,6 +1,6 @@
 # Sharpness-Aware Minimization (SAM) Improves Classification Accuracy of Bacterial Raman Spectral Data Enabling Portable Diagnostics
 
-This repository (currently a work in progress) will contain modules and instructions for replicating and extending experiments featured in our paper.
+This repository contains modules and instructions for replicating and extending experiments featured in our paper.
 
 ## Setup Repository and Requirements
 Clone repository 
@@ -101,6 +101,18 @@ options:
                         Directory containing model parameters.
   --seed SEED           Initialization seed.
   --save                Save results.
+```
+
+## Experimental Replication
+To replicate the experiments in the paper, the clinical data can be downloaded [here](https://www.dropbox.com/scl/fo/fb29ihfnvishuxlnpgvhg/AJToUtts-vjYdwZGeqK4k-Y?rlkey=r4p070nsuei6qj3pjp13nwf6l&e=1&dl=0) and saved into a `spectral_data` folder (or adjust filepaths accordingly). 
+
+Across 10 selected seeds for n=5 trials, run:
+```
+for activation in selu relu gelu; do
+    for optimizer in SAM Adam; do
+            python3 train.py --optimizer $optimizer --base_optimizer Adam --epochs 100 --activation $activation --seed SEED
+    done
+done
 ```
 
 ## Citation
