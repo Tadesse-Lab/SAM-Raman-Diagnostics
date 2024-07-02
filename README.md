@@ -8,6 +8,19 @@ This repository contains modules and instructions for replicating and extending 
 - A training script `./train.py` to train the 1-D ResNet architecture on spectral data
 - An evaluation script `./inference.py` to evaluate the trained network on test data
 
+## Citation
+If you find anything in our paper or repository useful, please consider citing:
+```
+@inproceedings{
+    zareno2024sharpnessaware,
+    title={Sharpness-Aware Minimization ({SAM}) Improves Classification Accuracy of Bacterial Raman Spectral Data Enabling Portable Diagnostics},
+    author={Kaitlin Zareno and Jarett Dewbury and Siamak Sorooshyari and Hossein Mobahi and Loza F. Tadesse},
+    booktitle={5th Workshop on practical ML for limited/low resource settings},
+    year={2024},
+    url={https://openreview.net/forum?id=k6FDRRRddZ}
+}
+```
+
 ## Setup Repository and Requirements
 Clone repository 
 ```
@@ -119,17 +132,4 @@ for activation in selu relu gelu; do
             python3 train.py --optimizer $optimizer --base_optimizer Adam --epochs 100 --activation $activation --seed SEED
     done
 done
-```
-
-## Citation
-If you find anything in our paper or repository useful, please consider citing:
-```
-@inproceedings{
-    zareno2024sharpnessaware,
-    title={Sharpness-Aware Minimization ({SAM}) Improves Classification Accuracy of Bacterial Raman Spectral Data Enabling Portable Diagnostics},
-    author={Kaitlin Zareno and Jarett Dewbury and Siamak Sorooshyari and Hossein Mobahi and Loza F. Tadesse},
-    booktitle={5th Workshop on practical ML for limited/low resource settings},
-    year={2024},
-    url={https://openreview.net/forum?id=k6FDRRRddZ}
-}
 ```
