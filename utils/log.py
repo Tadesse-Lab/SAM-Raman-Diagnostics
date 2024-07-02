@@ -103,4 +103,7 @@ class Log:
         print(f"Test Accuracy: {100*accuracy:10.2f} %")
 
     def done(self) -> None:
+        loss = self.epoch_state["loss"] / self.epoch_state["steps"]
+        accuracy = self.epoch_state["accuracy"] / self.epoch_state["steps"]
+        print(f"{loss:12.4f}  │{100*accuracy:10.2f} %  ┃", flush=True)
         print(f"┠──────────────╂──────────────┼──────────────╂──────────────┼──────────────╂──────────────┼──────────────┨")
