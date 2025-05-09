@@ -104,8 +104,8 @@ To replicate the experiments in the paper, the clinical data can be downloaded [
 Across 10 selected seeds for n=5 trials, run:
 ```
 for activation in selu relu gelu; do
-    for optimizer in SAM Adam; do
-            python3 train.py --optimizer $optimizer --base_optimizer Adam --epochs 100 --activation $activation --seed SEED
+    for optimizer in sam adam; do
+            python3 SAMRaman.py --optimizer $optimizer --base_optimizer adam --epochs 100 --activation $activation --seed SEED
     done
 done
 ```
