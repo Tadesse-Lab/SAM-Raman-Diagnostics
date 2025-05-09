@@ -37,7 +37,7 @@ python3 SAMRaman.py --optimizer SAM --spectra_dirs SPECTRA_DIRS ... --label_dirs
 Spectra and label directories support multiple paths to combine datasets together. Please ensure that the spectra_intervals align with the order
 of the paths.
 
-You can modify the default arguments in the [config](utils\config.py) file, or specify CLI arguments during inference.
+You can modify the default arguments in the [config](utils/config.py) file, or specify CLI arguments during inference.
 
 Full CLI:
 ```
