@@ -30,10 +30,10 @@ def parse_args():
         help=f"Directories containing label data files. Default: {config.label_dirs}",
     )
     parser.add_argument(
-        "--spectra_interval",
+        "--spectra_intervals",
         nargs="+",
         type=int,
-        help=f"Specified patient intervals for clinical significance. Default: {config.spectra_interval}",
+        help=f"Specified patient intervals for clinical significance. Default: {config.spectra_intervals}",
     )
     parser.add_argument(
         "--batch_size",

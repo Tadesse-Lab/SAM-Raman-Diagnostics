@@ -17,7 +17,7 @@ class Config:
             "data/spectral_data/y_2019clinical.npy",
         ]
     )
-    spectra_interval: List[int] = field(default_factory=lambda: [400, 100])
+    spectra_intervals: List[int] = field(default_factory=lambda: [400, 100])
 
     # training params
     batch_size: int = 16
