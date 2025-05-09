@@ -1,12 +1,11 @@
 # Sharpness-Aware Minimization (SAM) Improves Classification Accuracy of Bacterial Raman Spectral Data Enabling Portable Diagnostics
 
-![[Results on clinical dataset](https://github.com/Jdewbury/SAM-Raman-Diagnostics/src/SAM-Raman-Diagnostics-1.png)](https://github.com/Jdewbury/SAM-Raman-Diagnostics/blob/main/src/SAM-Raman-Diagnostic-Result.png)
+![Results on clinical dataset](https://github.com/Jdewbury/SAM-Raman-Diagnostics/blob/main/src/SAM-Raman-Diagnostic-Result.png)
 <br><br>
 Antimicrobial resistance is expected to claim 10 million lives per year by 2050, and resource-limited regions are most affected. Raman spectroscopy is a novel pathogen diagnostic approach promising rapid and portable antibiotic resistance testing within a few hours, compared to days when using gold standard methods. However, current algorithms for Raman spectra analysis 1) are unable to generalize well on limited datasets across diverse patient populations and 2) require increased complexity due to the necessity of non-trivial pre-processing steps, such as feature extraction, which are essential to mitigate the low-quality nature of Raman spectral data. In this work, we address these limitations using Sharpness-Aware Minimization (SAM) to enhance model generalization across a diverse array of hyperparameters in clinical bacterial isolate classification tasks. We demonstrate that SAM achieves accuracy improvements of up to $10.5\%$ on a single split, and an increase in average accuracy of $2.7\%$ across all splits in spectral classification tasks over the traditional optimizer, Adam. These results display the capability of SAM to advance the clinical application of AI-powered Raman spectroscopy tools.
 <br><br>
 This repository contains modules and instructions for replicating and extending experiments featured in our paper:
-- A training script `./train.py` to train the 1-D ResNet architecture on spectral data
-- An evaluation script `./inference.py` to evaluate the trained network on test data
+- A sample experiment script [SAMRaman.py](SAMRaman.py) to train and evaluate the 1-D ResNet architecture on spectral data
 
 ## Citation
 If you find anything in our paper or repository useful, please consider citing:
@@ -30,100 +29,77 @@ Install requirements:
 ```
 pip install -r requirements.txt
 ```
-## Train
-If you want to train the model from scratch, here is a sample training run:
+## Training and Evaluation
+If you want to train the model from scratch and evaluate it on a test set, here is a sample training run:
 ```
-python3 train.py --optimizer SAM --epochs 100 --spectra_dir 'PATH_TO_SPECTRA' --label_dir 'PATH_TO_LABEL' --spectra_interval SPECTRA_INTERVAL
+python3 SAMRaman.py --optimizer SAM --spectra_dirs SPECTRA_DIRS ... --label_dirs LABEL_DIRS ... --spectra_intervals SPECTRA_INTERVALS ...
 ```
-Spectra and label directories also support multiple paths to combine datasets together, as long as spectra_intervals align. For example:
-```
-python3 train.py --optimizer SAM --epochs 100 --spectra_dir 'PATH_TO_SPECTRA1' 'PATH_TO_SPECTRA2' --label_dir 'PATH_TO_LABEL1' 'PATH_TO_LABEL2' --spectra_interval SPECTRA_INTERVAL1 SPECTRA_INTERVAL2
-```
+Spectra and label directories support multiple paths to combine datasets together. Please ensure that the spectra_intervals align with the order
+of the paths.
+
+You can modify the default arguments in the [config](utils/config.py) file, or specify CLI arguments during inference.
+
 Full CLI:
 ```
-usage: train.py [-h] [--epochs EPOCHS] [--spectra_dir SPECTRA_DIR] [--label_dir LABEL_DIR]
-                [--list_trials LIST_TRIALS] [--spectra_interval SPECTRA_INTERVAL] [--splits_dir SPLITS_DIR]
-                [--batch_size BATCH_SIZE] [--learning_rate LEARNING_RATE] [--in_channels IN_CHANNELS]
-                [--layers LAYERS] [--hidden_size HIDDEN_SIZE] [--block_size BLOCK_SIZE]
-                [--n_classes N_CLASSES] [--input_dim INPUT_DIM] [--rho RHO] [--momentum MOMENTUM]
-                [--weight_decay WEIGHT_DECAY] [--label_smoothing LABEL_SMOOTHING] [--activation ACTIVATION]
-                [--optimizer OPTIMIZER] [--base_optimizer BASE_OPTIMIZER] [--seed SEED] [--shuffle SHUFFLE]
-                [--save]
+usage: SAMRaman.py [-h] [--spectra_dirs SPECTRA_DIRS [SPECTRA_DIRS ...]] [--label_dirs LABEL_DIRS [LABEL_DIRS ...]]
+                   [--spectra_intervals SPECTRA_INTERVALS [SPECTRA_INTERVALS ...]] [--batch_size BATCH_SIZE] [--epochs EPOCHS] [--learning_rate LEARNING_RATE]    
+                   [--seed SEED] [--model {resnet1d}] [--in_channels IN_CHANNELS] [--layers LAYERS] [--hidden_size HIDDEN_SIZE] [--block_size BLOCK_SIZE]
+                   [--num_classes NUM_CLASSES] [--input_dim INPUT_DIM] [--activation {relu,selu,gelu}] [--optimizer {sam,asam,adam,sgd}]
+                   [--base_optimizer {adam,sgd}] [--rho RHO] [--weight_decay WEIGHT_DECAY] [--momentum MOMENTUM] [--label_smoothing LABEL_SMOOTHING]
+                   [--scheduler {step,cosine,none}] [--lr_step LR_STEP] [--output_dir OUTPUT_DIR] [--experiment_name EXPERIMENT_NAME]
+                   [--early_stopping_patience EARLY_STOPPING_PATIENCE]
 
 options:
   -h, --help            show this help message and exit
-  --epochs EPOCHS       Total number of epochs.
-  --spectra_dir SPECTRA_DIR
-                        Directory to spectra.
-  --label_dir LABEL_DIR
-                        Directory to labels.
-  --list_trials LIST_TRIALS
-                        Specified trials to run.
-  --spectra_interval SPECTRA_INTERVAL
-                        Specified patient intervals for clinical significance.
-  --splits_dir SPLITS_DIR
-                        Directory to data splits.
+  --spectra_dirs SPECTRA_DIRS [SPECTRA_DIRS ...]
+                        Directories containing spectral data files. Default: ['data/spectral_data/X_2018clinical.npy', 'data/spectral_data/X_2019clinical.npy']   
+  --label_dirs LABEL_DIRS [LABEL_DIRS ...]
+                        Directories containing label data files. Default: ['data/spectral_data/y_2018clinical.npy', 'data/spectral_data/y_2019clinical.npy']      
+  --spectra_intervals SPECTRA_INTERVALS [SPECTRA_INTERVALS ...]
+                        Specified patient intervals for clinical significance. Default: [400, 100]
   --batch_size BATCH_SIZE
-                        Batch size for the training and validation loops.
+                        Batch size for the training and validation loops. Default: 16
+  --epochs EPOCHS       Total number of training epochs. Default: 200
   --learning_rate LEARNING_RATE
-                        Learning rate for the optimizer.
+                        Initial learning rate for training. Default: 0.001
+  --seed SEED           Seed to use for reproducibility. Default: 42
+  --model {resnet1d}    Model architecture to be used for training. Default: resnet
   --in_channels IN_CHANNELS
-                        Number of input channels.
-  --layers LAYERS       Number of layers in the model.
+                        Number of input channels. Default: 64
+  --layers LAYERS       Number of layers in the model. Default: 6
   --hidden_size HIDDEN_SIZE
-                        Size of the hidden layer in the model.
+                        Size of the hidden layer in the model. Default: 100
   --block_size BLOCK_SIZE
-                        Block size for the model.
-  --n_classes N_CLASSES
-                        Number of classes in the classification task.
+                        Block size for the model. Default: 2
+  --num_classes NUM_CLASSES
+                        Number of classes in the classification task. Default: 5
   --input_dim INPUT_DIM
-                        Input dimension for the model.
-  --rho RHO             Rho value for the optimizer.
-  --momentum MOMENTUM   Momentum value for the optimizer.
+                        Input dimension for the model. Default: 1000
+  --activation {relu,selu,gelu}
+                        Activation function to use for model. Default: selu
+  --optimizer {sam,asam,adam,sgd}
+                        Optimizer to use for training. Default: sam
+  --base_optimizer {adam,sgd}
+                        Base optimizer for SAM/ASAM. Default: adam
+  --rho RHO             Rho value for SAM/ASAM optimizers. Default: 0.05
   --weight_decay WEIGHT_DECAY
-                        Weight decay value for the optimizer.
+                        Weight decay for optimizer. Default: 0.0005
+  --momentum MOMENTUM   Momentum value for SGD. Default: 0.9
   --label_smoothing LABEL_SMOOTHING
-                        Use 0.0 for no label smoothing.
-  --activation ACTIVATION
-                        Type of activation to use in ResNet.
-  --optimizer OPTIMIZER
-                        optimizer to be used.
-  --base_optimizer BASE_OPTIMIZER
-                        base optimizer to be used.
-  --seed SEED           Initialization seed.
-  --shuffle SHUFFLE     Shuffle training set.
-  --save                Save results.
-```
-
-## Inference
-If you want to run inference on your trained model, here is a sample run:
-```
-python3 inference.py --spectra_dir 'PATH_TO_SPECTRA' --label_dir 'PATH_TO_LABEL' --spectra_interval SPECTRA_INTERVAL --param_dir 'PATH_TO_MODEL_PARAMS' --weight_dir 'PATH_TO_TRAINED_WEIGHTS'
-```
-Full CLI:
-```
-usage: inference.py [-h] [--spectra_dir SPECTRA_DIR] [--label_dir LABEL_DIR]
-                    [--spectra_interval SPECTRA_INTERVAL] [--weight_dir WEIGHT_DIR] [--param_dir PARAM_DIR]
-                    [--seed SEED] [--save]
-
-options:
-  -h, --help            show this help message and exit
-  --spectra_dir SPECTRA_DIR
-                        Directory to spectra.
-  --label_dir LABEL_DIR
-                        Directory to labels.
-  --spectra_interval SPECTRA_INTERVAL
-                        Specified patient intervals for clinical significance.
-  --weight_dir WEIGHT_DIR
-                        Directory containing model weight(s).
-  --param_dir PARAM_DIR
-                        Directory containing model parameters.
-  --seed SEED           Initialization seed.
-  --save                Save results.
+                        Label smoothing factor. Default: 0.1
+  --scheduler {step,cosine,none}
+                        Learning rate scheduler to use. Default: step
+  --lr_step LR_STEP     Learning rate step size. Default: 0.2
+  --output_dir OUTPUT_DIR
+                        Output directory to save training results. Default: results
+  --experiment_name EXPERIMENT_NAME
+                        Name of experiment. Default: sam-raman
+  --early_stopping_patience EARLY_STOPPING_PATIENCE
+                        Number of epochs without improvement for early stopping. Default: 15
 ```
 
 ## Experimental Replication
-To replicate the experiments in the paper, the clinical data can be downloaded [here](https://www.dropbox.com/scl/fo/fb29ihfnvishuxlnpgvhg/AJToUtts-vjYdwZGeqK4k-Y?rlkey=r4p070nsuei6qj3pjp13nwf6l&e=1&dl=0) and saved into a `spectral_data` folder (or adjust filepaths accordingly). 
+To replicate the experiments in the paper, the clinical data can be downloaded [here](https://www.dropbox.com/scl/fo/fb29ihfnvishuxlnpgvhg/AJToUtts-vjYdwZGeqK4k-Y?rlkey=r4p070nsuei6qj3pjp13nwf6l&e=1&dl=0) and saved into a `data/spectral_data` folder (or adjust filepaths accordingly). 
 
 Across 10 selected seeds for n=5 trials, run:
 ```
