@@ -182,7 +182,7 @@ def run_model_training_and_evaluation():
     dataset = SAMRaman(
         spectral_dirs=config["spectra_dirs"],
         label_dirs=config["label_dirs"],
-        patient_intervals=config["spectra_interval"],
+        patient_intervals=config["spectra_intervals"],
         batch_size=config["batch_size"],
         seed=config["seed"],
     )
