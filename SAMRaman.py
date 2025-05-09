@@ -240,7 +240,7 @@ def run_model_training_and_evaluation():
     test_dir = experiment_dir / "inference"
     test_dir.mkdir(parents=True, exist_ok=True)
 
-    test_accuracy = evaluate(model=model, dataloader=dataset.test, device=device)
+    test_accuracy = evaluate(model=model, dataloader=dataset.test_loader, device=device)
 
     print(f"test results -  test_acc: {test_accuracy}")
 
