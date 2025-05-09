@@ -81,7 +81,10 @@ def train(
 
                 # second step
                 disable_running_stats(model)
-                smooth_crossentropy(model(inputs), targets, smoothing=label_smoothing)
+                loss_second = smooth_crossentropy(
+                    model(inputs), targets, smoothing=label_smoothing
+                )
+                loss_second.mean().backward()
                 optimizer.second_step(zero_grad=True)
             else:
                 pred = model(inputs)

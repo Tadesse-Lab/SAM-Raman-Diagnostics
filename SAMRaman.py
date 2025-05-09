@@ -199,7 +199,6 @@ def run_model_training_and_evaluation():
         num_classes=config["num_classes"],
         activation=config["activation"],
     )
-    model = model.to(device)
 
     # get optimizer and scheduler
     optimizer = get_optimizer(
